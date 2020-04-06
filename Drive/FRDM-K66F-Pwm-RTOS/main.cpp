@@ -1,10 +1,14 @@
 #include "mbed.h"
+#include "logger.h"
+#define LOG_LEVEL_DEBUG
+
 Thread pwmThread(osPriorityNormal,OS_STACK_SIZE,nullptr,"pwm");
 Thread statusThread(osPriorityNormal,OS_STACK_SIZE,nullptr,"status");
 
 PwmOut motor(D6);
 DigitalOut ledStatus(LED1);
-Serial pc(USBTX,USBRX,115200);
+Serial pc(USBTX,USBRX,921600);
+
 
 void pwmSig(PwmOut *output){
     
@@ -43,7 +47,7 @@ int main()
     statusThread.start(callback(blink, &ledStatus));
 
     while (true) {
-
+        ThisThread::sleep_for(1000);
     }
 }
 
