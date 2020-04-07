@@ -7,7 +7,7 @@ This is my autonomous car project
 ### Current goals
 1. Establish stable dataconnections with PC (Ethernet,Can,USB)
 2. Design SW-Architecture for the drive
-3. Control PWM-Ouput with keyboard(direct or via PC)
+3. Control PWM-Output with keyboard(direct or via PC)
 4. Establish documnetaion creation with doxygen and sphinx as in NXP_Cup
 
 ### Evaluate
