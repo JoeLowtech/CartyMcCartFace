@@ -9,10 +9,12 @@ This is my autonomous car project
 2. Design SW-Architecture for the drive
 3. Control PWM-Output with keyboard(direct or via PC)
 4. Establish documentaion creation with doxygen and sphinx as in NXP_Cup
+5. Write Wiki for logger
 
 ### Evaluate
 1. Mbed Tutorials
 2. Priorities in RTOS systems
-3. Different connections to choose from (usb, ethernet,can)
-4. logging events from MCU :
-	* for debugging : https://os.mbed.com/users/ollie8/code/Logger/
+	
+### Done
+* Logging is done with https://os.mbed.com/users/ollie8/code/Logger/ 
+* Evaluate Connections -> TCP is used since the others are not implemented. Get back to them in the future
