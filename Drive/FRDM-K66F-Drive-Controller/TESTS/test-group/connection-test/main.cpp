@@ -12,9 +12,10 @@ using namespace utest::v1;
 // This is how a test case looks
 static void ethernet_tcp_test(void) {
     /* test content here */
-    CommunicationInterface connection("192.168.178.1",0);
-    TEST_ASSERT_EQUAL(0, connection.connect());
-
+    CommunicationInterface server;
+    TEST_ASSERT_EQUAL(0, server.start());
+    TEST_ASSERT_EQUAL_STRING("192.168.178.24", server.get_client_ip());
+    TEST_ASSERT_EQUAL(5, server.recv());
 }
 
 utest::v1::status_t greentea_setup(const size_t number_of_cases) {
