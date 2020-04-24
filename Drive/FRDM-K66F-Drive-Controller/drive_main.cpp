@@ -3,6 +3,7 @@
 #include "mbed.h"
 #define LOG_LEVEL_DEBUG
 #include "logger.h"
+#include "CommunicationInterface.h"
 
 Thread pwmThread(osPriorityNormal,OS_STACK_SIZE,nullptr,"pwm");
 Thread statusThread(osPriorityNormal,OS_STACK_SIZE,nullptr,"status");

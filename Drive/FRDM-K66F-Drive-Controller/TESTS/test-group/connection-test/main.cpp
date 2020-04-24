@@ -3,19 +3,23 @@
 #include "unity/unity.h"
 #include "greentea-client/test_env.h"
 
-
 #include "CommunicationInterface.h"
 
 using namespace utest::v1;
 
 // mbed test -t ARM -m auto -v -n tests-test-group-connection-test
-// This is how a test case looks
+
 static void ethernet_tcp_test(void) {
     /* test content here */
     CommunicationInterface server;
     TEST_ASSERT_EQUAL(0, server.start());
     TEST_ASSERT_EQUAL_STRING("192.168.178.24", server.get_client_ip());
-    TEST_ASSERT_EQUAL(5, server.recv());
+    
+    // Overall bytes received
+    TEST_ASSERT_EQUAL(8, server.recv());
+    
+    // Decoded test message
+
 }
 
 utest::v1::status_t greentea_setup(const size_t number_of_cases) {

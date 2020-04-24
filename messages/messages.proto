@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message driveMessage {
+	int32 steering = 1;
+	float power = 2;
+}

@@ -1,6 +1,6 @@
 #include "CommunicationInterface.h"
 
-CommunicationInterface::CommunicationInterface()
+CommunicationInterface::CommunicationInterface(): codec(receiveBuffer,BUFFERSIZE)
 {
     net = NetworkInterface::get_default_instance();
 }
@@ -45,5 +45,12 @@ nsapi_size_or_error_t CommunicationInterface::start(){
 
 nsapi_size_or_error_t CommunicationInterface::recv(){
     
-    return client->recv(receiveBuffer, BUFFERSIZE);
+    if((receivedBytes = client->recv(receiveBuffer, BUFFERSIZE))){
+        decodedMessage = driveMessage_init_zero;
+        
+        if(!codec.decode_msg(&decodedMessage)){
+            ERROR("Received message not decoded\n");
+        }
+    }
+    return receivedBytes;
 }
