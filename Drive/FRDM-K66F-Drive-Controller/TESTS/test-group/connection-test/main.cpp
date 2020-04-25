@@ -17,9 +17,10 @@ static void ethernet_tcp_test(void) {
     
     // Overall bytes received
     TEST_ASSERT_EQUAL(8, server.recv());
-    
     // Decoded test message
-
+    driveMessage* receivedMessage = server.get_message();
+    TEST_ASSERT_EQUAL_INT32(1500,receivedMessage->steering);
+    TEST_ASSERT_EQUAL_INT32(0.5,receivedMessage->power);
 }
 
 utest::v1::status_t greentea_setup(const size_t number_of_cases) {

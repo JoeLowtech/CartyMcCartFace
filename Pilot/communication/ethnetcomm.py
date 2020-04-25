@@ -4,6 +4,9 @@ import socket
 import logging
 import time
 # import ifaddr
+
+from messages import messages_pb2
+
 logging.basicConfig(level=logging.DEBUG)
 LOGGER = logging.getLogger(__file__)
 
@@ -40,7 +43,11 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
 
 if __name__ == "__main__":
     HOST, PORT = "192.168.178.36", 9999
-    data = bytes([0x00,0x01,0x02,0x03,0x04])
+
+    message = messages_pb2.driveMessage()
+    message.steering = 1500
+    message.power = 0.5
+    data_to_send = message.SerializeToString()
 
     LOGGER.info(f"Connecting to {HOST}:{PORT}")
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
@@ -50,7 +57,7 @@ if __name__ == "__main__":
         
         while True:
             LOGGER.info("send data.")
-            sock.sendall(data)
+            sock.sendall(data_to_send)
             time.sleep(1)
 
     

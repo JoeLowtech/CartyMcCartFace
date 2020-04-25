@@ -9,7 +9,7 @@ nsapi_size_or_error_t CommunicationInterface::start(){
     
     status = net->connect();
     if (status != 0){
-       INFO("No Connection established: %d\n",status);
+       ERROR("No Connection established: %d\n",status);
     }
     else{
         INFO("nsapi-Code: %d IP address : %s, Port: %d\n",
@@ -19,15 +19,15 @@ nsapi_size_or_error_t CommunicationInterface::start(){
 
         status = listener.open(net);
         if (status != 0){
-            INFO("TCP Server Error: %d\n", status);
+            ERROR("TCP Server Error: %d\n", status);
         }
         else{
             if ((status = listener.bind(local))){
-                INFO("TCP Server Error: Binding failed %d\n",status);    
+                ERROR("TCP Server Error: Binding failed %d\n",status);    
             }
             else{
                 if((status = listener.listen())){
-                    INFO("TCP Server Error: Listen failed %d\n",status);
+                    ERROR("TCP Server Error: Listen failed %d\n",status);
                 }
                 else{
                     INFO("Start listening...\n");
