@@ -1,33 +1,36 @@
 #if !MBED_TEST_MODE
 
 #include "mbed.h"
-#define LOG_LEVEL_DEBUG
 #include "logger.h"
 #include "CommunicationInterface.h"
 
-Thread pwmThread(osPriorityNormal,OS_STACK_SIZE,nullptr,"pwm");
+Thread tcpThread(osPriorityHigh,OS_STACK_SIZE,nullptr,"TCP");
 Thread statusThread(osPriorityNormal,OS_STACK_SIZE,nullptr,"status");
 
-PwmOut motor(D6);
 DigitalOut ledStatus(LED1);
+CommunicationInterface server;
 
-void pwmSig(PwmOut *output){
-    
-    output->period_ms(20);
-    output->pulsewidth_ms(10);
-    uint16_t pulsewidth = 10;
-    uint32_t nextWake = 0;
+void tcpRead(CommunicationInterface* server){
+    driveMessage* receivedMessage;
+    nsapi_size_or_error_t serverStatus;
+    do{
+        serverStatus = server->start();
+    }
+    while(serverStatus != NSAPI_ERROR_OK);
 
-    while(true){
-        nextWake = get_ms_count()+100;
-        if(pulsewidth == 10 ){
-            pulsewidth += 10;
-        }
-        else {
-            pulsewidth -= 10;
-        }
-        output->period_ms(pulsewidth);
-        ThisThread::sleep_until(nextWake);
+    while(serverStatus == NSAPI_ERROR_OK){
+        nsapi_size_or_error_t receiveStatus;
+        
+        if((receiveStatus = server->recv())){
+            receivedMessage = server->decode();
+            INFO("Steering: %d",receivedMessage->steering);
+            INFO("Power:%f",receivedMessage->power);
+        }else{
+            ERROR("Something is wrong:%d",receiveStatus);
+            if(receiveStatus == 0){
+                serverStatus = NSAPI_ERROR_CONNECTION_LOST;
+            }
+        } 
     }
 }
 
@@ -37,7 +40,6 @@ void blink(DigitalOut *led){
     while(true){
         nextWake = get_ms_count()+1000;
         *led = !*led;
-        INFO("Switch!");
         ThisThread::sleep_until(nextWake);    
     }
 }
@@ -45,7 +47,7 @@ void blink(DigitalOut *led){
 
 int main()
 {
-    pwmThread.start(callback(pwmSig, &motor));
+    tcpThread.start(callback(tcpRead, &server));
     statusThread.start(callback(blink, &ledStatus));
     while (true) {
         ThisThread::sleep_for(1000);

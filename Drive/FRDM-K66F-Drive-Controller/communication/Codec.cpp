@@ -1,11 +1,19 @@
 #include "Codec.h"
 
 
-Codec::Codec(uint8_t* buffer, uint8_t buffersize){
-    input = pb_istream_from_buffer(buffer, buffersize);
+Codec::Codec(){
 }
 
+bool Codec::decode_msg(uint8_t* messageBuffer,uint8_t messageSize){
+    input = pb_istream_from_buffer(messageBuffer, messageSize);
+    decodedMessage = driveMessage_init_zero;
+    bool error_message = false;
 
-bool Codec::decode_msg(driveMessage *message){
-    return pb_decode(&input, driveMessage_fields, message);  
+    if(!(error_message = pb_decode_ex(&input,
+                                       driveMessage_fields,
+                                       &decodedMessage,
+                                       PB_DECODE_DELIMITED))){
+            ERROR("Received message not decoded: %s", PB_GET_ERROR(&input));
+    }
+    return error_message;
 }    

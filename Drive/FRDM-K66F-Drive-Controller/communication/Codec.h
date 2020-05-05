@@ -7,17 +7,20 @@
 #include "pb.h"
 #include "messages.pb.h"
 #include "pb_decode.h"
+#include "logger.h"
 
 
  class Codec{
     private:
+        driveMessage decodedMessage;
         pb_istream_t input;
-        // void encode_msg();
-        
-    public:
-        Codec(uint8_t* inputBuffer, uint8_t buffersize);
 
-        bool decode_msg(driveMessage *message);
-        // driveMessage* get_message();   
+    public:
+        Codec();
+        bool decode_msg(uint8_t* messageBuffer,uint8_t messageSize);
+        driveMessage* get_decoded_message(){
+            return &decodedMessage;
+        };
+
  };
  #endif

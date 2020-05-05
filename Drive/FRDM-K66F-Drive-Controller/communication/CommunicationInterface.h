@@ -15,29 +15,28 @@
         SocketAddress local, clientAddress;
         TCPSocket listener;
         TCPSocket* client = NULL;
-        Codec codec;
-        driveMessage decodedMessage;
 
         static constexpr uint8_t BUFFERSIZE = 255;
         uint8_t receiveBuffer[BUFFERSIZE];
         nsapi_size_or_error_t receivedBytes;
 
     public:
+        Codec codec;
+
         CommunicationInterface();
-        
+
         nsapi_size_or_error_t start();
         void send();
         nsapi_size_or_error_t recv();
+        driveMessage* decode(){
+                   codec.decode_msg(receiveBuffer, receivedBytes);
+            return codec.get_decoded_message();
+        }
         nsapi_size_or_error_t get_status(){
             return status;
         }
-
         const char* get_client_ip(){
             return clientAddress.get_ip_address();
-        }
-
-        driveMessage* get_message(){
-            return &decodedMessage;
         }
  };
  #endif
