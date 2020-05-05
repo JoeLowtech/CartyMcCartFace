@@ -56,7 +56,7 @@
 
 #else
     static Serial pc(USBTX,USBRX,115200);
-
+    #define LOG_LEVEL_DEBUG
     #if defined LOG_LEVEL_TRACE
         #define TRACE(x, ...) std::printf("[TRACE: %s:%d]"x"\r\n", __FILE__, __LINE__, ##__VA_ARGS__);
         #define DEBUG(x, ...) std::printf("[DEBUG: %s:%d]"x"\r\n", __FILE__, __LINE__, ##__VA_ARGS__);
