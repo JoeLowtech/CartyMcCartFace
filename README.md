@@ -1,5 +1,6 @@
 # CartyMcCartFace
-This is my autonomous car project
+This is my autonomous car project  
+[CartyMcCartFace Wiki](https://github.com/JoeLowtech/CartyMcCartFace/wiki)
 
 ## Overal goal
 * Build a development platform for autonomous driving and other kinds of freaky stuff you want to do
