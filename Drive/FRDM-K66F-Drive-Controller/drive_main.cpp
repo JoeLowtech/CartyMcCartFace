@@ -3,36 +3,16 @@
 #include "mbed.h"
 #include "logger.h"
 #include "CommunicationInterface.h"
+#include "tasks.h"
+#include "DataDistributor.h"
 
 Thread tcpThread(osPriorityHigh,OS_STACK_SIZE,nullptr,"TCP");
-Thread statusThread(osPriorityNormal,OS_STACK_SIZE,nullptr,"status");
+Thread driveThread(osPriorityNormal,OS_STACK_SIZE,nullptr, "DRIVE");
+Thread statusThread(osPriorityBelowNormal,OS_STACK_SIZE,nullptr,"STATUS");
 
 DigitalOut ledStatus(LED1);
 CommunicationInterface server;
-
-void tcpRead(CommunicationInterface* server){
-    driveMessage* receivedMessage;
-    nsapi_size_or_error_t serverStatus;
-    do{
-        serverStatus = server->start();
-    }
-    while(serverStatus != NSAPI_ERROR_OK);
-
-    while(serverStatus == NSAPI_ERROR_OK){
-        nsapi_size_or_error_t receiveStatus;
-        
-        if((receiveStatus = server->recv())){
-            receivedMessage = server->decode();
-            INFO("Steering: %d",receivedMessage->steering);
-            INFO("Power:%f",receivedMessage->power);
-        }else{
-            ERROR("Something is wrong:%d",receiveStatus);
-            if(receiveStatus == 0){
-                serverStatus = NSAPI_ERROR_CONNECTION_LOST;
-            }
-        } 
-    }
-}
+DataDistributor dataQueues;
 
 void blink(DigitalOut *led){
     uint32_t nextWake = 0;
@@ -47,8 +27,12 @@ void blink(DigitalOut *led){
 
 int main()
 {
-    tcpThread.start(callback(tcpRead, &server));
+    tasks::ARGS taskArgs { &server, &dataQueues};
+ 
     statusThread.start(callback(blink, &ledStatus));
+    driveThread.start(callback(tasks::drive,&taskArgs));
+    tcpThread.start(callback(tasks::tcpRead,&taskArgs));
+
     while (true) {
         ThisThread::sleep_for(1000);
     }

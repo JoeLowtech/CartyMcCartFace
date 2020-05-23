@@ -17,6 +17,7 @@ nsapi_size_or_error_t CommunicationInterface::start(){
         
         local.set_port(9999);
 
+
         status = listener.open(net);
         if (status != 0){
             ERROR("TCP Server Error: %d", status);
@@ -49,3 +50,5 @@ nsapi_size_or_error_t CommunicationInterface::recv(){
     }
     return receivedBytes;
 }
+
+
