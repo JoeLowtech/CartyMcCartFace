@@ -1,24 +1,31 @@
 #include "tasks.h"
 #include "logger.h"
 
-void tasks::tcpRead(ARGS* taskArgs){
+void tasks::tcpRead(DataDistributor* dataQueues){
     driveMessage* receivedMessage;
     nsapi_size_or_error_t serverStatus;
+    CommunicationInterface server;
+
     do{
-        serverStatus = taskArgs->server->start();
+        serverStatus = server.start();
     }
     while(serverStatus != NSAPI_ERROR_OK);
 
     while(serverStatus == NSAPI_ERROR_OK){
         nsapi_size_or_error_t receiveStatus;
         
-        if((receiveStatus = taskArgs->server->recv())){
-            receivedMessage = taskArgs->server->decode();
-            taskArgs->dataQueues->driveQueue.put(receivedMessage);
+        if((receiveStatus = server.recv())){
+            receivedMessage = server.decode();
+            dataQueues->driveQueue.put(receivedMessage);
         }else{
             ERROR("Something is wrong:%d",receiveStatus);
             if(receiveStatus == 0){
                 serverStatus = NSAPI_ERROR_CONNECTION_LOST;
+                //STOP THE CAR
+                driveMessage stopMessage;
+                stopMessage.power = 0.4;
+                stopMessage.steering = 1500;
+                dataQueues->driveQueue.put(&stopMessage);
             }
         } 
     }

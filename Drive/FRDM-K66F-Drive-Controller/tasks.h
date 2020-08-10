@@ -7,13 +7,7 @@
 
 namespace tasks{
 
-//will probably not used
-struct ARGS{
-    CommunicationInterface* server;
-    DataDistributor* dataQueues;
-};
-
-void tcpRead(ARGS* taskArgs);
-void drive(ARGS*taskArgs);
+void tcpRead(DataDistributor* dataQueues);
+void drive(DataDistributor* dataQueues);
 }
 #endif

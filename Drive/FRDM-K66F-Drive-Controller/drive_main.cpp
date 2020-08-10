@@ -11,7 +11,6 @@ Thread driveThread(osPriorityNormal,OS_STACK_SIZE,nullptr, "DRIVE");
 Thread statusThread(osPriorityBelowNormal,OS_STACK_SIZE,nullptr,"STATUS");
 
 DigitalOut ledStatus(LED1);
-CommunicationInterface server;
 DataDistributor dataQueues;
 
 void blink(DigitalOut *led){
@@ -27,11 +26,10 @@ void blink(DigitalOut *led){
 
 int main()
 {
-    tasks::ARGS taskArgs { &server, &dataQueues};
  
     statusThread.start(callback(blink, &ledStatus));
-    driveThread.start(callback(tasks::drive,&taskArgs));
-    tcpThread.start(callback(tasks::tcpRead,&taskArgs));
+    driveThread.start(callback(tasks::drive,&dataQueues));
+    tcpThread.start(callback(tasks::tcpRead,&dataQueues));
 
     while (true) {
         ThisThread::sleep_for(1000);
