@@ -14,10 +14,9 @@ DigitalOut ledStatus(LED1);
 DataDistributor dataQueues;
 
 void blink(DigitalOut *led){
-    uint32_t nextWake = 0;
     
     while(true){
-        nextWake = get_ms_count()+1000;
+        Kernel::Clock::time_point nextWake = Kernel::Clock::now()+1s;
         *led = !*led;
         ThisThread::sleep_until(nextWake);    
     }
@@ -32,7 +31,7 @@ int main()
     tcpThread.start(callback(tasks::tcpRead,&dataQueues));
 
     while (true) {
-        ThisThread::sleep_for(1000);
+        ThisThread::sleep_for(1s);
     }
 }
 

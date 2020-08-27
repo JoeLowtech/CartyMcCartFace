@@ -16,16 +16,16 @@ void tasks::tcpRead(DataDistributor* dataQueues){
         
         if((receiveStatus = server.recv())){
             receivedMessage = server.decode();
-            dataQueues->driveQueue.put(receivedMessage);
+            dataQueues->driveQueue.try_put(receivedMessage);
         }else{
             ERROR("Something is wrong:%d",receiveStatus);
             if(receiveStatus == 0){
                 serverStatus = NSAPI_ERROR_CONNECTION_LOST;
                 //STOP THE CAR
                 driveMessage stopMessage;
-                stopMessage.power = 0.4;
                 stopMessage.steering = 1500;
-                dataQueues->driveQueue.put(&stopMessage);
+                stopMessage.power = 0.4;
+                dataQueues->driveQueue.try_put(&stopMessage);
             }
         } 
     }

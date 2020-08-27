@@ -5,18 +5,19 @@
 
 void tasks::drive(DataDistributor *dataQueues){
     driveMessage* driveCommands;
-    osEvent receiveMessage;
     Motor motor(D6);
-    Servo servo(D7);
+    Servo servo(D5);
 
     while(true){
-        receiveMessage = dataQueues->driveQueue.get();
-        if (receiveMessage.status == osEventMessage){
-            driveCommands = (driveMessage*)receiveMessage.value.p;
-        DEBUG("Steering: %d",driveCommands->steering);
-        servo.set(driveCommands->steering);
-        DEBUG("Power:%f",driveCommands->power);
-        motor.set(driveCommands->power);
+        
+        if (dataQueues->driveQueue.try_get_for(Kernel::wait_for_u32_forever,&driveCommands)){
+            DEBUG("Steering: %d",driveCommands->steering);
+            servo.set(driveCommands->steering);
+            DEBUG("Power:%f",driveCommands->power);
+            motor.set(driveCommands->steering);
+        }
+        else{
+            DEBUG("No drive data aquired.")
         }
     }
 }
