@@ -26,6 +26,7 @@
         CommunicationInterface();
 
         nsapi_size_or_error_t start();
+        nsapi_size_or_error_t reconnect();
         void send();
         nsapi_size_or_error_t recv();
         driveMessage* decode(){

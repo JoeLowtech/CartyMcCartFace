@@ -44,6 +44,22 @@ nsapi_size_or_error_t CommunicationInterface::start(){
     return status;
 }
 
+nsapi_size_or_error_t CommunicationInterface::reconnect(){
+    client->close();
+    client = NULL;
+    if((status = listener.listen())){
+        ERROR("TCP Server Error: Listen failed %d",status);
+    }
+    else{
+        INFO("Start listening...\n");
+        client = listener.accept();
+        INFO("Client connected!\n");
+        client->getpeername(&clientAddress);
+        DEBUG("Client IP : %s\n",get_client_ip());
+    }
+    return status;
+}
+
 nsapi_size_or_error_t CommunicationInterface::recv(){
     
     if((receivedBytes = client->recv(receiveBuffer, BUFFERSIZE))){

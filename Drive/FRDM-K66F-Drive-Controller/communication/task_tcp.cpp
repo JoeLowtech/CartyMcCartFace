@@ -27,6 +27,9 @@ void tasks::tcpRead(DataDistributor* dataQueues){
                 stopMessage.power = 0.4;
                 dataQueues->driveQueue.try_put(&stopMessage);
             }
+        }
+        if(serverStatus == NSAPI_ERROR_CONNECTION_LOST){
+            serverStatus = server.reconnect();
         } 
     }
 }
