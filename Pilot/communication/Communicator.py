@@ -3,13 +3,12 @@ import socket
 import logging
 from google.protobuf.internal.encoder import _VarintBytes
 
-from .messages import messages_pb2
+import communication.messages_pb2 as messages_pb2
 
 LOGGER = logging.getLogger(__file__)
 
 class MCUCommunicator:
-    """
-    Handles communication with the MCU via ethernet.
+    """Handles communication with the MCU via ethernet.
     Protobuf is used as message protocol.
     """
     def __init__(self,HOST,PORT):
