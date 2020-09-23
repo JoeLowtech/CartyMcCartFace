@@ -6,7 +6,7 @@
 void tasks::drive(DataDistributor *dataQueues){
     driveMessage* driveCommands;
     Motor motor(D6);
-    Servo servo(D5);
+    Servo servo(D3);
 
     while(true){
         
@@ -14,7 +14,7 @@ void tasks::drive(DataDistributor *dataQueues){
             DEBUG("Steering: %d",driveCommands->steering);
             servo.set(driveCommands->steering);
             DEBUG("Power:%f",driveCommands->power);
-            motor.set(driveCommands->steering);
+            motor.set(driveCommands->power);
         }
         else{
             DEBUG("No drive data aquired.")
