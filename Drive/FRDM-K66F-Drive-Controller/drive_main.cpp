@@ -1,4 +1,5 @@
 #if !MBED_TEST_MODE
+// Activate HS-Mode in mbed_overrides.c to get 180 MHz SystemCoreClock speed
 
 #include "mbed.h"
 #include "logger.h"
@@ -25,7 +26,6 @@ void blink(DigitalOut *led){
 
 int main()
 {
- 
     statusThread.start(callback(blink, &ledStatus));
     driveThread.start(callback(tasks::drive,&dataQueues));
     tcpThread.start(callback(tasks::tcpRead,&dataQueues));
